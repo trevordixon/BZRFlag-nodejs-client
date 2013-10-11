@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = BZRClient;
 
 var net = require('net');
@@ -26,7 +28,7 @@ BZRClient.prototype.doAction = function(command, callback){
 			});
 		});
 	});
-}
+};
 
 BZRClient.prototype.getInfo = function(command, reader, callback){
 	var me = this;
@@ -40,7 +42,7 @@ BZRClient.prototype.getInfo = function(command, reader, callback){
 			});
 		});
 	});
-}
+};
 
 BZRClient.prototype.nextCommand = function() {
 	if(!this.runningCommand && this.queue.length > 0){
@@ -91,7 +93,7 @@ BZRClient.prototype.getNextLine = function(callback){
 			me.getNextLine(callback);
 		});
 	}
-}
+};
 
 BZRClient.prototype.sendCommand = function(command) {
 	this.client.write(command+'\n');
@@ -104,7 +106,7 @@ BZRClient.prototype.handshake = function() {
 			me.sendCommand('agent 1');
 			done();
 		});
-	})
+	});
 };
 
 BZRClient.prototype.close = function() {
@@ -118,9 +120,9 @@ BZRClient.prototype.readArray = function(callback) {
 };
 
 BZRClient.prototype.fail = function(expected, received) {
-	console.log("UNEXPECTED RESPONSE:");
-	console.log("	EXPECTED: " + expected);
-	console.log("  RECEIVED: " + received.join(' '));
+	console.log('UNEXPECTED RESPONSE:');
+	console.log('	EXPECTED: ' + expected);
+	console.log('  RECEIVED: ' + received.join(' '));
 	throw new Error();
 };
 
@@ -169,7 +171,7 @@ BZRClient.prototype.expectMultiple = function(possibilities, full, callback) {
 				return;
 			}
 		}
-		me.fail(possibilities.map(function(p){return p.join(' ')}).join(' or '), line);
+		me.fail(possibilities.map(function(p){return p.join(' ');}).join(' or '), line);
 	});
 };
 
@@ -215,7 +217,7 @@ BZRClient.prototype.readObstacles = function(callback) {
 				return;
 			}
 			var obstacle = [];
-			for(var i=0; i<result.length; i+=2){
+			for(i=0; i<result.length; i+=2){
 				obstacle.push({
 					x:parseFloat(result[i]),
 					y:parseFloat(result[i+1])
@@ -322,10 +324,10 @@ BZRClient.prototype.readMyTanks = function(callback){
 				return;
 			}
 			var tank = {
-				index: parseInt(result[0]),
+				index: parseInt(result[0], 10),
 				callsign: result[1],
 				status: result[2],
-				shotsAvailable: parseInt(result[3]),
+				shotsAvailable: parseInt(result[3], 10),
 				timeToReload: parseFloat(result[4]),
 				flag: result[5],
 				loc: {
@@ -340,7 +342,7 @@ BZRClient.prototype.readMyTanks = function(callback){
 			tanks.push(tank);
 			getTank();
 		});
-	};
+	}
 	this.expect('begin', false, function(){
 		getTank();
 	});
@@ -369,7 +371,7 @@ BZRClient.prototype.readOtherTanks = function(callback){
 			tanks.push(tank);
 			getTank();
 		});
-	};
+	}
 	this.expect('begin', false, function(){
 		getTank();
 	});
@@ -388,13 +390,13 @@ BZRClient.prototype.readBases = function(callback) {
 				color: result[0],
 				corners: []
 			};
-			for(var i=1; i<result.length; i+=2){
+			for(i=1; i<result.length; i+=2){
 				base.corners.push({x:parseFloat(result[i]),y:parseFloat(result[i+1])});
 			}
 			bases.push(base);
 			getBase();
 		});
-	};
+	}
 	this.expect('begin', false, function(){
 		getBase();
 	});
@@ -416,7 +418,7 @@ BZRClient.prototype.readConstants = function(callback){
 	me.expect('begin', false, function(){
 		getConstant();
 	});
-}
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////
 //                              PUBLIC METHODS
