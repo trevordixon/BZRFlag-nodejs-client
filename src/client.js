@@ -1,25 +1,6 @@
 module.exports = BZRClient;
 
-var net = require('net'),
-	bind = function(fn, selfObj, var_args) {
-		if (!fn) {
-			throw new Error();
-		}
-		if (arguments.length > 2) {
-			var boundArgs = Array.prototype.slice.call(arguments, 2);
-			return function() {
-				// Prepend the bound arguments to the current arguments.
-				var newArgs = Array.prototype.slice.call(arguments);
-				Array.prototype.unshift.apply(newArgs, boundArgs);
-				return fn.apply(selfObj, newArgs);
-			};
-
-		} else {
-			return function() {
-				return fn.apply(selfObj, arguments);
-			};
-		}
-	};
+var net = require('net');
 
 function BZRClient(port, host, debug){
 	this.client = net.connect({port:port,host:host||'localhost'}, function(){/*client connected*/});
@@ -463,37 +444,37 @@ BZRClient.prototype.angvel = function(id, angvel, callback) {
 //                          INFORMATION REQUESTS
 /////////////////////////////////////////////////////////////////////////////
 BZRClient.prototype.getTeams = function(callback) {
-	this.getInfo('teams', bind(this.readTeams,this), callback);
+	this.getInfo('teams', this.readTeams.bind(this), callback);
 };
 
 BZRClient.prototype.getObstacles = function(callback) {
-	this.getInfo('obstacles', bind(this.readObstacles,this), callback);
+	this.getInfo('obstacles', this.readObstacles.bind(this), callback);
 };
 
 BZRClient.prototype.getOccgrid = function(tankId, callback) {
-	this.getInfo('occgrid', bind(this.readOccgrid,this), callback);
+	this.getInfo('occgrid', this.readOccgrid.bind(this), callback);
 };
 
 BZRClient.prototype.getFlags = function(callback) {
-	this.getInfo('flags', bind(this.readFlags,this), callback);
+	this.getInfo('flags', this.readFlags.bind(this), callback);
 };
 
 BZRClient.prototype.getShots = function(callback) {
-	this.getInfo('shots', bind(this.readShots,this), callback);
+	this.getInfo('shots', this.readShots.bind(this), callback);
 };
 
 BZRClient.prototype.getMyTanks = function(callback) {
-	this.getInfo('mytanks', bind(this.readMyTanks,this), callback);
+	this.getInfo('mytanks', this.readMyTanks.bind(this), callback);
 };
 
 BZRClient.prototype.getOtherTanks = function(callback) {
-	this.getInfo('othertanks', bind(this.readOtherTanks,this), callback);
+	this.getInfo('othertanks', this.readOtherTanks.bind(this), callback);
 };
 
 BZRClient.prototype.getBases = function(callback) {
-	this.getInfo('bases', bind(this.readBases,this), callback);
+	this.getInfo('bases', this.readBases.bind(this), callback);
 };
 
 BZRClient.prototype.getConstants = function(callback) {
-	this.getInfo('constants', bind(this.readConstants,this), callback);
+	this.getInfo('constants', this.readConstants.bind(this), callback);
 };
